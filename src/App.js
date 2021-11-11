@@ -15,13 +15,16 @@ const Container1 = styled.div`
 `;
 
 class App extends React.Component {
- state =
- {
-	id: Date.now(),
-	name: "Jupiter",
-	value: 10000.0,
-	imageUrl: {Jupiter},
-}
+ state ={
+   
+
+ }
+//  {
+// 	id: Date.now(),
+// 	name: "Jupiter",
+// 	value: 10000.0,
+// 	imageUrl: {Jupiter},
+// }
 
   render() {
 
@@ -30,6 +33,7 @@ class App extends React.Component {
       <Container1>
         <Filtro />
         <Cards />
+        
         <ItensCarrinho />
       </Container1>
     );
