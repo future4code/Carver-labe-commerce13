@@ -1,6 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import Jupiter from '../img/Jupiter.jpg'
+import Jupiter from '../img/Jupiter.jpg';
+import Venus from '../img/Venus.jpg';
+import Marte from '../img/Marte.jpg';
+import Saturno from '../img/Saturno.jpg';
 
 const ContainerPrincipal = styled.div`
   border: 1px solid blue;
@@ -18,23 +21,46 @@ const CardsPlanetas = styled.div`
   margin: 10px;
   width: 150px;
   height: 300px;
-  
 
   img {
     width: 150px;
     height: 170px;
   }
-  `
+`;
 
 class Cards extends React.Component {
-  state = 
-  {
-    id:   Date.now(),
-   name: "Jupiter",
-   value: "R$ 1.000.00",
-   imageUrl: <img src={Jupiter}Jupiter/>
- }
+  state = {
+    planetas: [
+      {
+        id: Date.now(),
+        name: 'Jupiter',
+        value: 'R$ 1.000.00',
+        imageUrl: <img src={Jupiter} Jupiter />,
+      },
+      {
+        id: Date.now(),
+        name: 'Marte',
+        value: 'R$ 1.000.00',
+        imageUrl: <img src={Marte} Marte />,
+      },
+      {
+        id: Date.now(),
+        name: 'Venus',
+        value: 'R$ 1.000.00',
+        imageUrl: <img src={Venus} Venus />,
+      },
+      {
+        id: Date.now(),
+        name: 'Saturno',
+        value: 'R$ 1.000.00',
+        imageUrl: <img src={Saturno} Saturno />,
+      },
+    ],
+  };
   render() {
+    const variavel = this.state.planetas.map((planeta) => {
+      return planeta.name;
+    });
     return (
       <ContainerPrincipal>
         <header>
@@ -48,12 +74,11 @@ class Cards extends React.Component {
           </line>
         </header>
         <CardsPlanetas>
-         <p>{this.state.imageUrl}</p>
-         <p>{this.state.name}</p>
-         <p>{this.state.value}</p>
-         <button>Comprar</button>
+          {variavel}
+          {/* <p>{this.state.name}</p>
+          <p>{this.state.value}</p> */}
+          <button>Comprar</button>
         </CardsPlanetas>
-        
       </ContainerPrincipal>
     );
   }
