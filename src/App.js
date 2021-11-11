@@ -3,6 +3,10 @@ import ItensCarrinho from './componentes/Carrinho/ItensCarrinho';
 import Filtro from './componentes/Filters/Filtro';
 import Cards from './componentes/Products/Cards';
 import styled from 'styled-components';
+import Venus from './componentes/img/Venus.jpg'
+import Marte from './componentes/img/Marte.jpg'
+import Saturno from './componentes/img/Saturno.jpg'
+import Jupiter from './componentes/img/Jupiter.jpg'
 
 const Container1 = styled.div`
   display: grid;
@@ -11,7 +15,17 @@ const Container1 = styled.div`
 `;
 
 class App extends React.Component {
+ state =
+ {
+	id: Date.now(),
+	name: "Jupiter",
+	value: 10000.0,
+	imageUrl: {Jupiter},
+}
+
   render() {
+
+    
     return (
       <Container1>
         <Filtro />
