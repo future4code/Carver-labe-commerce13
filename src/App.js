@@ -48,25 +48,25 @@ class App extends React.Component {
       {
         id: Date.now(),
         name: 'Jupiter',
-        value: 'R$ 1.000.00',
+        value: 100000, 
         imageUrl: <img src={Jupiter} Jupiter />,
       },
       {
         id: Date.now(),
         name: 'Marte',
-        value: 'R$ 2.000.00',
+        value:  200000 ,
         imageUrl: <img src={Marte} Marte />,
       },
       {
         id: Date.now(),
         name: 'Venus',
-        value: 'R$ 3.000.00',
+        value: 300000 ,
         imageUrl: <img src={Venus} Venus />,
       },
       {
         id: Date.now(),
         name: 'Saturno',
-        value: 'R$ 4.000.00',
+        value: 400000,
         imageUrl: <img src={Saturno} Saturno />,
       },
     ],
@@ -74,9 +74,10 @@ class App extends React.Component {
     inputValorMin: '',
     inputBusca: '',
 
-    guardarBusca: '',
-    guardarValorMax: '',
-    guardarValorMin: '',
+    // guardarBusca: '',
+    // guardarValorMax: '',
+    // guardarValorMin: '',
+    
   };
 
   onChangeInputValorMax = (event) => {
@@ -91,22 +92,28 @@ class App extends React.Component {
   };
 
   render() {
-    const variavel = this.state.planetas.map((planeta) => {
+    const transformaPlaneta = this.state.planetas
+    .filter(dado =>{
+      return dado.name.toLowerCase().includes(this.state.inputBusca.toLocaleLowerCase())
+    })
+    .filter(valor =>{
+      return this.state.inputValorMin === "" || valor.value >= this.state.inputValorMin
+    })
+    .filter(valor =>{
+      return this.state.inputValorMax === "" || valor.value <= this.state.inputValorMax
+    })
+    .sort()
+    .map((planeta) => {
       return (
         <CardsPlanetas>
           <b>{planeta.name}</b>
           {planeta.imageUrl}
-          <b>{planeta.value}</b>
+          <b>R${planeta.value}</b>
           <p>
             <button>Comprar</button>
           </p>
         </CardsPlanetas>
       );
-    });
-    const copiaPlanetas = [...this.state.planetas];
-
-    const filtarNomes = copiaPlanetas.filter(() => {
-      return copiaPlanetas.includes(this.state.inputBusca);
     });
 
     return (
@@ -115,13 +122,13 @@ class App extends React.Component {
           <h2>Filtro</h2>
           <p>Valor Mínimo</p>
           <input
-            type="Number"
+            type="number"
             value={this.state.inputValorMin}
             onChange={this.onChangeInputValorMin}
           />
           <p>Valor Máximo</p>
           <input
-            type="Number"
+            type="number"
             value={this.state.inputValorMax}
             onChange={this.onChangeInputValorMax}
           />
@@ -131,7 +138,6 @@ class App extends React.Component {
             value={this.state.inputBusca}
             onChange={this.onChangeInputBusca}
           />
-          {filtarNomes}
         </ContainerFiltro>
         <ContainerCards>
           <div>
@@ -146,7 +152,7 @@ class App extends React.Component {
               </line>
             </Cabecalho>
           </div>
-          {variavel}
+          {transformaPlaneta}
         </ContainerCards>
 
         <ItensCarrinho />
