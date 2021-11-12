@@ -46,25 +46,25 @@ class App extends React.Component {
   state = {
     planetas: [
       {
-        id: Date.now(),
+        id: 1,
         name: 'Jupiter',
         value: 100000, 
         imageUrl: <img src={Jupiter} Jupiter />,
       },
       {
-        id: Date.now(),
+        id: 2,
         name: 'Marte',
         value:  1200000 ,
         imageUrl: <img src={Marte} Marte />,
       },
       {
-        id: Date.now(),
+        id: 3,
         name: 'Venus',
         value: 3500000 ,
         imageUrl: <img src={Venus} Venus />,
       },
       {
-        id: Date.now(),
+        id: 4,
         name: 'Saturno',
         value: 400000,
         imageUrl: <img src={Saturno} Saturno />,
@@ -73,7 +73,8 @@ class App extends React.Component {
     inputValorMax: '',
     inputValorMin: '',
     inputBusca: '',
-    selectOrdenacao: 'crescente'
+    selectOrdenacao: 'crescente',
+    carrinho: []
 
     // guardarBusca: '',
     // guardarValorMax: '',
@@ -96,6 +97,15 @@ class App extends React.Component {
     this.setState({ selectOrdenacao: event.target.value })
   }
 
+  adicionarPlanetaNoCarrinho = (id) =>{
+    const produto = this.state.planetas.filter(produto =>{
+      return produto.id === id
+    })
+    const novoCarrinho = [...this.state.carrinho, produto[0]]
+
+    this.setState({carrinho: novoCarrinho})
+  }
+
   render() {
     const transformaPlaneta = this.state.planetas
     .filter(dado =>{
@@ -109,7 +119,7 @@ class App extends React.Component {
     })
     .sort((menor, maior) =>{
       switch (this.state.selectOrdenacao){
-        case "decrescente":
+        case 'decrescente':
           return maior.value - menor.value
         default:
           return menor.value - maior.value
@@ -122,7 +132,7 @@ class App extends React.Component {
           {planeta.imageUrl}
           <b>R${planeta.value}</b>
           <p>
-            <button>Comprar</button>
+            <button onClick ={() =>this.adicionarPlanetaNoCarrinho(planeta.id)}>Comprar</button>
           </p>
         </CardsPlanetas>
       );
@@ -134,19 +144,19 @@ class App extends React.Component {
           <h2>Filtro</h2>
           <p>Valor Mínimo</p>
           <input
-            type="number"
+            type='number'
             value={this.state.inputValorMin}
             onChange={this.onChangeInputValorMin}
           />
           <p>Valor Máximo</p>
           <input
-            type="number"
+            type='number'
             value={this.state.inputValorMax}
             onChange={this.onChangeInputValorMax}
           />
           <p>Busca</p>
           <input
-            type="text"
+            type='text'
             value={this.state.inputBusca}
             onChange={this.onChangeInputBusca}
           />
@@ -169,8 +179,15 @@ class App extends React.Component {
           </div>
           {transformaPlaneta}
         </ContainerCards>
-
-        <ItensCarrinho />
+        <div>
+        {this.state.carrinho.map((produto) =>{
+            return <div>
+              {produto.value}
+              <button>remover</button>
+            </div>
+            }
+          )}
+        </div>
       </Container1>
     );
   }
