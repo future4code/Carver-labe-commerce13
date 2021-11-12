@@ -54,13 +54,13 @@ class App extends React.Component {
       {
         id: Date.now(),
         name: 'Marte',
-        value:  200000 ,
+        value:  1200000 ,
         imageUrl: <img src={Marte} Marte />,
       },
       {
         id: Date.now(),
         name: 'Venus',
-        value: 300000 ,
+        value: 3500000 ,
         imageUrl: <img src={Venus} Venus />,
       },
       {
@@ -73,6 +73,7 @@ class App extends React.Component {
     inputValorMax: '',
     inputValorMin: '',
     inputBusca: '',
+    selectOrdenacao: 'crescente'
 
     // guardarBusca: '',
     // guardarValorMax: '',
@@ -91,18 +92,29 @@ class App extends React.Component {
     this.setState({ inputBusca: event.target.value });
   };
 
+  onChangeMudarOrdenacao = (event) =>{
+    this.setState({ selectOrdenacao: event.target.value })
+  }
+
   render() {
     const transformaPlaneta = this.state.planetas
     .filter(dado =>{
       return dado.name.toLowerCase().includes(this.state.inputBusca.toLocaleLowerCase())
     })
     .filter(valor =>{
-      return this.state.inputValorMin === "" || valor.value >= this.state.inputValorMin
+      return this.state.inputValorMin === '' || valor.value >= this.state.inputValorMin
     })
     .filter(valor =>{
-      return this.state.inputValorMax === "" || valor.value <= this.state.inputValorMax
+      return this.state.inputValorMax === '' || valor.value <= this.state.inputValorMax
     })
-    .sort()
+    .sort((menor, maior) =>{
+      switch (this.state.selectOrdenacao){
+        case "decrescente":
+          return maior.value - menor.value
+        default:
+          return menor.value - maior.value
+      }
+    })
     .map((planeta) => {
       return (
         <CardsPlanetas>
@@ -145,9 +157,12 @@ class App extends React.Component {
               Quantidade de produtos
               <line>
                 Ordenação
-                <select>
-                  <option>Crescente</option>
-                  <option>Decrescente</option>
+                <select 
+                value={this.state.selectOrdenacao}
+                onChange={this.onChangeMudarOrdenacao}
+                >
+                  <option value='crescente'>Crescente</option>
+                  <option value='decrescente'>Decrescente</option>
                 </select>
               </line>
             </Cabecalho>
