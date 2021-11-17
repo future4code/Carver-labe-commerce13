@@ -1,6 +1,6 @@
+/* eslint-disable jsx-a11y/alt-text */
 import React from 'react';
-import ItensCarrinho from './componentes/Carrinho/ItensCarrinho';
-import styled, { ThemeConsumer } from 'styled-components';
+import styled from 'styled-components';
 import Venus from './componentes/img/Venus.jpg';
 import Marte from './componentes/img/Marte.jpg';
 import Saturno from './componentes/img/Saturno.jpg';
@@ -42,43 +42,50 @@ const CardsPlanetas = styled.div`
   }
 `;
 
+const ContainerCarrinho = styled.div`
+  border: 1px solid black;
+  padding: 10px;
+  margin: 10px;
+`;
+const planetas = [
+  {
+    id: 1,
+    name: 'Jupiter',
+    value: 100000,
+    imageUrl: <img src={Jupiter} Jupiter />,
+    quantidade: 0,
+  },
+  {
+    id: 2,
+    name: 'Marte',
+    value: 1200000,
+    imageUrl: <img src={Marte} Marte />,
+    quantidade: 0,
+  },
+  {
+    id: 3,
+    name: 'Venus',
+    value: 3500000,
+    imageUrl: <img src={Venus} Venus />,
+    quantidade: 0,
+  },
+  {
+    id: 4,
+    name: 'Saturno',
+    value: 400000,
+    imageUrl: <img src={Saturno} Saturno />,
+    quantidade: 0,
+  },
+];
 class App extends React.Component {
   state = {
-    planetas: [
-      {
-        id: Date.now(),
-        name: 'Jupiter',
-        value: 100000, 
-        imageUrl: <img src={Jupiter} Jupiter />,
-      },
-      {
-        id: Date.now(),
-        name: 'Marte',
-        value:  1200000 ,
-        imageUrl: <img src={Marte} Marte />,
-      },
-      {
-        id: Date.now(),
-        name: 'Venus',
-        value: 3500000 ,
-        imageUrl: <img src={Venus} Venus />,
-      },
-      {
-        id: Date.now(),
-        name: 'Saturno',
-        value: 400000,
-        imageUrl: <img src={Saturno} Saturno />,
-      },
-    ],
     inputValorMax: '',
     inputValorMin: '',
     inputBusca: '',
-    selectOrdenacao: 'crescente'
-
-    // guardarBusca: '',
-    // guardarValorMax: '',
-    // guardarValorMin: '',
-    
+    selectOrdenacao: 'crescente',
+    itemNovo: '',
+    carrinho: [],
+    remover: '',
   };
 
   onChangeInputValorMax = (event) => {
@@ -92,41 +99,96 @@ class App extends React.Component {
     this.setState({ inputBusca: event.target.value });
   };
 
-  onChangeMudarOrdenacao = (event) =>{
-    this.setState({ selectOrdenacao: event.target.value })
-  }
+  onChangeMudarOrdenacao = (event) => {
+    this.setState({ selectOrdenacao: event.target.value });
+  };
 
-  render() {
-    const transformaPlaneta = this.state.planetas
-    .filter(dado =>{
-      return dado.name.toLowerCase().includes(this.state.inputBusca.toLocaleLowerCase())
-    })
-    .filter(valor =>{
-      return this.state.inputValorMin === '' || valor.value >= this.state.inputValorMin
-    })
-    .filter(valor =>{
-      return this.state.inputValorMax === '' || valor.value <= this.state.inputValorMax
-    })
-    .sort((menor, maior) =>{
-      switch (this.state.selectOrdenacao){
-        case "decrescente":
-          return maior.value - menor.value
-        default:
-          return menor.value - maior.value
-      }
-    })
-    .map((planeta) => {
-      return (
-        <CardsPlanetas>
-          <b>{planeta.name}</b>
-          {planeta.imageUrl}
-          <b>R${planeta.value}</b>
-          <p>
-            <button>Comprar</button>
-          </p>
-        </CardsPlanetas>
+  adicionarAoCarrinho = (idProduto) => {
+    const produtoNoCarrinho = this.state.carrinho.find(
+      (produto) => idProduto === produto.id
+    );
+
+    if (produtoNoCarrinho) {
+      const novosProdutosNoCarrinho = this.state.carrinho.map((produto) => {
+        if (idProduto === produto.id) {
+          return {
+            ...produto,
+            quantidade: produto.quantidade + 1,
+          };
+        }
+
+        return produto;
+      });
+
+      this.setState({ carrinho: novosProdutosNoCarrinho });
+    } else {
+      const adicionarProdutos = planetas.find(
+        (produto) => idProduto === produto.id
       );
-    });
+
+      const novosProdutosNoCarrinho = [
+        ...this.state.carrinho,
+        { ...adicionarProdutos, quantidade: 1 },
+      ];
+
+      this.setState({ carrinho: novosProdutosNoCarrinho });
+    }
+  };
+
+  valorTotal = () => {
+    let valor = 0;
+
+    for (let produto of planetas) {
+      valor += produto.value * produto.quantidade;
+    }
+
+    return valor;
+  };
+  render() {
+    const transformaPlaneta = planetas
+      .filter((dado) => {
+        return dado.name
+          .toLowerCase()
+          .includes(this.state.inputBusca.toLocaleLowerCase());
+      })
+      .filter((valor) => {
+        return (
+          this.state.inputValorMin === '' ||
+          valor.value >= this.state.inputValorMin
+        );
+      })
+      .filter((valor) => {
+        return (
+          this.state.inputValorMax === '' ||
+          valor.value <= this.state.inputValorMax
+        );
+      })
+      .sort((menor, maior) => {
+        switch (this.state.selectOrdenacao) {
+          case 'decrescente':
+            return maior.value - menor.value;
+          default:
+            return menor.value - maior.value;
+        }
+      })
+      .map((planeta) => {
+        return (
+          <CardsPlanetas>
+            <b>{planeta.name}</b>
+            {planeta.imageUrl}
+            <b>R${planeta.value}</b>
+            <p>
+              <button
+                onClick={() => {
+                  this.adicionarAoCarrinho(planeta.id);
+                }}
+              >
+                Comprar
+              </button>
+            </p>
+          </CardsPlanetas>
+        );
+      });
 
     return (
       <Container1>
@@ -157,20 +219,30 @@ class App extends React.Component {
               Quantidade de produtos
               <line>
                 Ordenação
-                <select 
-                value={this.state.selectOrdenacao}
-                onChange={this.onChangeMudarOrdenacao}
+                <select
+                  value={this.state.selectOrdenacao}
+                  onChange={this.onChangeMudarOrdenacao}
                 >
-                  <option value='crescente'>Crescente</option>
-                  <option value='decrescente'>Decrescente</option>
+                  <option value="crescente">Crescente</option>
+                  <option value="decrescente">Decrescente</option>
                 </select>
               </line>
             </Cabecalho>
           </div>
           {transformaPlaneta}
         </ContainerCards>
-
-        <ItensCarrinho />
+        <ContainerCarrinho>
+          <h2>Itens Carrinho</h2>
+          {this.state.carrinho.map((produto) => {
+            return (
+              <div>
+                {produto.name}
+                <button>remover</button>
+              </div>
+            );
+          })}
+          <p>Valor total: {this.valorTotal}</p>
+        </ContainerCarrinho>
       </Container1>
     );
   }
